@@ -1,12 +1,14 @@
 
 const { PrismaClient } = require('@prisma/client');
 const express = require('express');
+const bodyParser = require('body-parser');
+const authRoutes = require('./routes/authRoutes');
 const app = express();
 const prisma = new PrismaClient();
 
 app.use(bodyParser.json());
 
-
+app.use('/auth', authRoutes);
 
 async function logError(error) {
      try {
