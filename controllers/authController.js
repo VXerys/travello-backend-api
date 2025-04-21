@@ -37,7 +37,7 @@ const registerUser = async (req, res) => {
                     username,
                     password : await bcrypt.hash(password, SALT_ROUNDS),
                     verificationCode,
-                    verficationCodeExpires: new Date(Date.now() + 24 * 60 * 60 * 1000)
+                    verificationCodeExpires: new Date(Date.now() + 24 * 60 * 60 * 1000)
                }
           });
 
@@ -60,7 +60,7 @@ const registerUser = async (req, res) => {
           email,
           password: hashedPassword,
           verificationCode,
-          verficationCodeExpires: new Date(Date.now() + 3600000),
+          verificationCodeExpires: new Date(Date.now() + 3600000),
           profile: {
                create: {
                     displayName: username,
@@ -124,7 +124,7 @@ const verifyEmail = async (req, res) => {
      data: {
           isVerified: true,
           verificationCode: null,
-          verficationCodeExpires: null
+          verificationCodeExpires: null
      }
     });
 
@@ -228,8 +228,8 @@ const loginUser = async (req, res) => {
       }
     });
 
-    // belum final
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    // Menggunakan fungsi yang sudah di-import
+     const token = generateToken({ id: user.id });     
 
     res.status(200).json({ 
      token, 
@@ -255,9 +255,9 @@ const loginUser = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const { email, currentPassword, newPassword, confirmPassword } = req.body;
+    const { email, currentPassword, newPassword, confirmNewPassword } = req.body;
 
-    if (!email || !currentPassword || !newPassword || !confirmPassword) {
+    if (!email || !currentPassword || !newPassword || !confirmNewPassword) {
       return res.status(400).json({ error: 'Email, current password, new password, and confirm password are required' });
     }
 
@@ -340,7 +340,7 @@ const forgotPassword = async (req, res) => {
       },
     });
 
-    await emailService.sendResetEmail(user.email, resetToken);
+    await emailService.sendResetPasswordEmail(email, resetToken, user.username);
 
     res.status(200).json({ message: 'Password reset instructions sent to your email' });
   } catch (error) {

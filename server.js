@@ -1,3 +1,4 @@
+require('dotenv').config(); // Pindahkan ini ke paling atas
 
 const { PrismaClient } = require('@prisma/client');
 const express = require('express');

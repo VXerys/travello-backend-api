@@ -1,7 +1,12 @@
 const jwt = require('jsonwebtoken');
 const { secretKey } = require('../config/passportConfig'); 
 
+console.log('JWT Secret available:', !!secretKey); 
+
 const generateToken = (userId) => {
+  if (!secretKey) {
+    throw new Error('JWT Secret key is undefined. Check your environment variables.');
+  }
   return jwt.sign({ userId }, secretKey, {});
 };
 
