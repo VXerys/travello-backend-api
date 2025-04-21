@@ -7,14 +7,22 @@ const generateToken = (userId) => {
   if (!secretKey) {
     throw new Error('JWT Secret key is undefined. Check your environment variables.');
   }
-  return jwt.sign({ userId }, secretKey, {});
+  return jwt.sign({ userId }, secretKey, {}, { expiresIn: '7h' });
 };
 
 const verifyToken = (token) => {
+  if (!secretKey) {
+    throw new Error('JWT Secret key is undefined. Check your environment variables.');
+  }
   return jwt.verify(token, secretKey);
 };
 
 const authenticateToken = (req, res, next) => {
+
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    return next();
+  }
+
   const authHeader = req.headers.authorization;
 
   if (authHeader) {
